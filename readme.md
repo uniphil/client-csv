@@ -17,6 +17,15 @@ On Internet Explorere 10+, which does not recognize the `download` attribute, `m
 For other browsers, it explodes, throwing `Error`. whee...
 
 
+### Install
+
+```bash
+$ npm install client-csv
+```
+
+You can use it with `browserify`, `amd`, or just `<script src="dist.js">` it to a vanilla JS project.
+
+
 ### You should know
 
 - You have to create the CSV as a big string, this library does not help with that. Check out [papa parse](http://papaparse.com/).
