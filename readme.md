@@ -34,7 +34,7 @@ You can use it with `browserify`, `amd`, or just `<script src="dist.js">` it to 
 
 
 ```javascript
-var aClickFactory = require('client-csv.')
+var aClickFactory = require('client-csv').aClickFactory;
 
 document.getElementById('downloadLink')
   .addEventListener('click', aClickFactory('blah.csv', function getData() {
