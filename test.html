@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Test downloader</title>
+    <script>module={};</script>
+    <script src="./dl.js"></script>
+  </head>
+  <body>
+    <textarea id="contents">a	b	✓
+1	2	3
+4	5	6</textarea>
+    <a href="#" download="blah.csv" id="dl">sup</a>
+    <script>
+      document.getElementById('dl').addEventListener('click', aClickFactory('blah.csv', function() {
+        return document.getElementById('contents').value;
+      }));
+    </script>
+  </body>
+</html>

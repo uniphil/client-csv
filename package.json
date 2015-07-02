@@ -1,0 +1,24 @@
+{
+  "name": "client-csv",
+  "version": "0.0.0",
+  "description": "Client-side CSV downloader, supporting IE10+",
+  "main": "dist.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uniphil/client-csv.git"
+  },
+  "keywords": [
+    "client",
+    "download",
+    "csv",
+    "excel"
+  ],
+  "author": "uniphil",
+  "bugs": {
+    "url": "https://github.com/uniphil/client-csv/issues"
+  },
+  "homepage": "https://github.com/uniphil/client-csv#readme"
+}
