@@ -50,7 +50,7 @@ function toDataURL(data) {
 
 
 /**
- * Get a string as an arraybuffer, for IE10+
+ * Get a string as an UTF-16 arraybuffer, for IE10+
  */
 function toArrayBuff(str) {
   var buf = new ArrayBuffer(str.length * 2 + 2);  // extra two bytes for the BOM
@@ -64,60 +64,66 @@ function toArrayBuff(str) {
 
 
 /**
- * Best-case download mechanism: use the `download` property on the <a> tag
+ * Get a binary string as a U8 ArrayBuffer
  */
-function anchorDownload(link, fname, data) {
-  link.setAttribute('download', fname);
-  link.href = toDataURL(data);
-}
-
-
-/**
- * IE10+ fallback case: use MS's proprietary msSaveOrOpenBlob feature
- */
-function ieDownload(fname, data) {
-  var blobObj = new Blob([toArrayBuff(data)]);
-  window.navigator.msSaveOrOpenBlob(blobObj, fname);
-}
-
-
-/**
- * Download the content
- *
- * This function should be called synchronously in the click handler of an
- * anchor (<a>) element.
- *
- * @param e -- the click event
- * @param fname -- the file name of the downloaded file
- * @param getData -- callback returning a string for the file contents
- * @throws `Error` if the current browser is not supported
- */
-function download(e, fname, getData) {
-  if (hasDownload) {
-    anchorDownload(e.target, fname, getData());
-  } else if (ieSave) {
-    e.preventDefault();
-    ieDownload(fname, getData());
-  } else {
-    throw new Error('Please upgrade to a modern browser to download files');
+function toU8Buff(str) {
+  var out = new Uint8Array(str.length);
+  for (var i=0; i < str.length; i++) {
+    out[i] = str.charCodeAt(i);
   }
+  return out;
 }
 
 
-/**
- * Helper to hook up downloading to a link
- *
- * @params see `download` above
- * @throws `Error`, see `download` above.
- */
-function aClickFactory(fname, getData) {
-  return function dlHandler(e) {
-    return download(e, fname, getData);
-  }
+function textEncoder(str) {
+  return {
+    asDataURL: function() {
+      return toDataURL(str);
+    },
+    asBlob: function() {
+      return new Blob([toArrayBuff(str)]);
+    },
+  };
 }
 
 
-module.exports = {
-  download: download,
-  aClickFactory: aClickFactory,
+function canvasEncoder(cv) {
+  return {
+    asDataURL: function() {
+      return cv.toDataURL('image/png');
+    },
+    asBlob: function() {  // use toDataURL because toBlob is async
+      var binStr = atob(this.asDataURL().split(',')[1]);
+      return new Blob([toU8Buff(binStr)], {type: 'image/png'});
+    },
+  };
+}
+
+
+var encoders = {
+  text: textEncoder,
+  canvas: canvasEncoder,
 };
+
+
+function clickDownload(link, cb) {
+  link.addEventListener('click', function download(evt) {
+    var stuff = cb(encoders);
+
+    if (hasDownload) {
+      link.setAttribute('download', stuff.filename);
+      link.href = stuff.contents.asDataURL();
+
+    } else if (ieSave) {
+      evt.preventDefault();
+      window.navigator.msSaveOrOpenBlob(stuff.contents.asBlob(), stuff.filename);
+
+    } else {
+      throw new Error('Please upgrade to a modern browser to download files');
+    }
+
+  });
+}
+
+
+module.exports = clickDownload;

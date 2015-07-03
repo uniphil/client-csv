@@ -7,14 +7,34 @@
     <script src="./dl.js"></script>
   </head>
   <body>
-    <textarea id="contents">a	b	✓
+
+    <textarea id="text">a	b	✓
 1	2	3
 4	5	6</textarea>
-    <a href="#" download="blah.csv" id="dl">sup</a>
+    <a href="#" id="dl-csv">download csv</a>
+
+    <canvas id="canvas" width="100" height="70"></canvas>
+    <a href="#" id="dl-canvas">download canvas</a>
+
     <script>
-      document.getElementById('dl').addEventListener('click', aClickFactory('blah.csv', function() {
-        return document.getElementById('contents').value;
-      }));
+
+      document.getElementById('canvas')
+        .getContext('2d').fillRect(20, 10, 60, 50);
+
+      clickDownload(document.getElementById('dl-csv'), function(encode) {
+        return {
+          filename: 'blah.csv',
+          contents: encode.text(document.getElementById('text').value),
+        };
+      });
+
+      clickDownload(document.getElementById('dl-canvas'), function(encode) {
+        return {
+          filename: 'blah.png',
+          contents: encode.canvas(document.getElementById('canvas')),
+        };
+      });
+
     </script>
   </body>
 </html>
