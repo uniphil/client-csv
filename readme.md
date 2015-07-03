@@ -34,10 +34,19 @@ You can use it with `browserify`, `amd`, or just `<script src="dist.js">` it to 
 
 
 ```javascript
-var aClickFactory = require('client-csv').aClickFactory;
+var clickDownload = require('client-csv');
 
-document.getElementById('downloadLink')
-  .addEventListener('click', aClickFactory('blah.csv', function getData() {
-    return 'a\tb\t✓\n1\t2\t3\n4\t5\t6';
-  }));
+clickDownload(document.getElementById('dl-csv'), function(encode) {
+return {
+  filename: 'blah.csv',
+  contents: encode.text(document.getElementById('text').value),
+};
+});
+
+clickDownload(document.getElementById('dl-canvas'), function(encode) {
+return {
+  filename: 'blah.png',
+  contents: encode.canvas(document.getElementById('canvas')),
+};
+});
 ```
