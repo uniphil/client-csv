@@ -106,20 +106,31 @@ var encoders = {
 };
 
 
-function clickDownload(link, cb) {
+function clickDownload(link, cb, errCB) {
   link.addEventListener('click', function download(evt) {
-    var stuff = cb(encoders);
+    try {
 
-    if (hasDownload) {
-      link.setAttribute('download', stuff.filename);
-      link.href = stuff.contents.asDataURL();
+      var stuff = cb(encoders);
 
-    } else if (ieSave) {
+      if (hasDownload) {
+        link.setAttribute('download', stuff.filename);
+        link.href = stuff.contents.asDataURL();
+
+      } else if (ieSave) {
+        evt.preventDefault();
+        window.navigator.msSaveOrOpenBlob(stuff.contents.asBlob(), stuff.filename);
+
+      } else {
+        throw new Error('Please upgrade to a modern browser to download files');
+      }
+
+    } catch (err) {
       evt.preventDefault();
-      window.navigator.msSaveOrOpenBlob(stuff.contents.asBlob(), stuff.filename);
-
-    } else {
-      throw new Error('Please upgrade to a modern browser to download files');
+      if (typeof errCB === 'function') {
+        errCB(err);
+      } else {
+        throw err;
+      }
     }
 
   });
