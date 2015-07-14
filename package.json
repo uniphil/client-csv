@@ -1,6 +1,6 @@
 {
   "name": "client-csv",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Client-side CSV downloader, supporting IE10+",
   "main": "dist.js",
   "scripts": {
