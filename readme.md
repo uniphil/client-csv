@@ -1,3 +1,12 @@
+⚠️ Archived ⚠️
+--------------
+
+Front-end dev has come a long way since 2015, and I haven't touched this since then, and web browsers have come a long way since then!
+
+If you need to support old browsers, you might still find some value in this, but for all practical purposes it has been unmaintained for a long time, so be aware that future updates are unlikely.
+
+
+
 Client CSV
 ==========
 
